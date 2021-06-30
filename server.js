@@ -15,8 +15,8 @@ app.use(express.static('public'));
 
 //  Acquiring routes from route files
 
-require('./routes/htmlRoute')(app);
-require('./routes/apiRoute')(app);
+require('./routes/htmlRoute.js')(app);
+require('./routes/apiRoute.js')(app);
 
 // Starts the server to begin listening
 

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { v4: uuidv4 } = require('uuidv4')
 
 module.exports = (app) => {
 
@@ -13,14 +14,14 @@ module.exports = (app) => {
     // Creating new note
 
     app.post('/api/notes', (req,res) => {
-        const newNote = req.body;
-        const dataBase = JSON.parse(fs.readFileSync('./db/db.json','utf8'));
+        let newNote = req.body;
+        newNote.id = uuidv();
 
-        fs.readFileSync('./db/db.json', JSON.stringify);
-
-        newNote.id = Math.random() * 100;
+        const dataBase = JSON.parse(fs.readFileSync('db/db.json','utf8'));
 
         dataBase.push(newNote);
+        fs.readFileSync('db/db.json', JSON.stringify(dataBase));
+
         res.json(newNote);
     });
 
