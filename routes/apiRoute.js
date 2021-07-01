@@ -1,28 +1,28 @@
 const fs = require('fs');
-const { v4: uuidv4 } = require('uuidv4')
+const { v4: uuidv4 } = require('uuid')
+
+let savedNote = {};
 
 module.exports = (app) => {
 
     // display note
     
     app.get('/api/notes', (req, res) => {
-        const dataBase = JSON.parse(fs.readFileSync('./db/db.json','utf8'));
+        fs.readFileSync('./db/db.json','utf8');
 
-        res.json(dataBase);
+        savedNote = JSON.parse(res);
+        res.json(savedNote);
     });
 
     // Creating new note
 
     app.post('/api/notes', (req,res) => {
-        let newNote = req.body;
-        newNote.id = uuidv();
+        req.body.id = uuidv4(); 
+        savedNote.push(req.body);
 
-        const dataBase = JSON.parse(fs.readFileSync('db/db.json','utf8'));
+        fs.writeFileSync('db/db.json', JSON.stringify(savedNote));
 
-        dataBase.push(newNote);
-        fs.readFileSync('db/db.json', JSON.stringify(dataBase));
-
-        res.json(newNote);
+        res.json(req.body);
     });
 
     // Deleting a note 
@@ -31,7 +31,7 @@ module.exports = (app) => {
         console.log(req.params.id);
 
         const deleteNote = note.filter(item => item.id != req.params.id);
-        note = deleteNote;
+        savedNote = deleteNote;
 
         return res.redirect('/');
     });
